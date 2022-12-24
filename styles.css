@@ -1,0 +1,39 @@
+body {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+#calc {
+  display: grid;
+  grid-template-rows: min-content;
+  background-color: rgb(0 166 173);
+  align-items: center;
+  color: black;
+  width: 300px;
+  height: 400px;
+  padding: 1em;
+}
+
+#display_row {
+  height: 100px;
+  border: 2px solid black;
+}
+
+button {
+  font-size: 40px;
+  border: 1px solid black;
+}
+
+#C {
+  background-color: lightsalmon;
+}
+
+.operator {
+  background-color: orange;
+}
+/*not using ATM*/
+.digits {
+  background-color: gray;
+}
