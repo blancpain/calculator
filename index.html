@@ -11,9 +11,12 @@
 
 <body>
   <div id="calc">
-    <div id="display_row"></div>
+    <div id="display_row">
+      <div id="results"></div>
+      <div id="current_selection">0</div>
+    </div>
     <div class="calc_row">
-      <button id="C">C</button>
+      <button class="C">C</button>
       <button id="toggle_sign">+/-</button>
       <button id="percentange">%</button>
       <button class="operator">/</button>
@@ -37,9 +40,9 @@
       <button class="operator">+</button>
     </div>
     <div class="final_row">
-      <button id="zero">0</button>
+      <button class="number" ; id="zero">0</button>
       <button id="decimal">,</button>
-      <button class="operator">=</button>
+      <button id="equals">=</button>
     </div>
   </div>
 </body>
