@@ -6,24 +6,50 @@ body {
 }
 
 #calc {
-  display: grid;
-  grid-template-rows: min-content;
-  background-color: rgb(0 166 173);
-  align-items: center;
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
   color: black;
+  justify-content: space-evenly;
   width: 300px;
   height: 400px;
-  padding: 1em;
+  border: 1px solid black;
 }
 
 #display_row {
   height: 100px;
+  background-color: rgb(44, 41, 44);
   border: 2px solid black;
 }
+.calc_row,
+.final_row {
+  display: flex;
+  flex: 1;
+}
+
+.calc_row > * {
+  flex: 1 100%;
+}
+
+/* .final_row > * { */
+/*   flex: 1 100%; */
+/* } */
 
 button {
-  font-size: 40px;
+  font-size: 30px;
   border: 1px solid black;
+}
+
+.final_row > * {
+  flex-grow: 1;
+}
+
+#zero {
+  width: 106.5px;
+}
+
+#decimal {
+  width: 32px;
 }
 
 #C {
