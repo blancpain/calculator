@@ -16,11 +16,79 @@ function operate(operator, a, b) {
     return add(a, b);
   } else if (operator === "-") {
     return subtract(a, b);
-  } else if (operator === "*") {
+  } else if (operator === "×") {
     return multiply(a, b);
-  } else if (operator === "/") {
+  } else if (operator === "÷") {
     return divide(a, b);
   }
+}
+//TODO: create an object for the different inputs - number, operator, equals, decimal etc and refer to the relevant functions
+
+let textOfFinalOutcome = "";
+
+function displayResult(a, b, operator) {
+  if (
+    a !== undefined &&
+    b !== undefined &&
+    textOfFinalOutcome !== results.textContent
+  ) {
+    finalResult = operate(operator, a, b);
+    results.textContent = `${a} ${operator} ${b} =`;
+    display.textContent = finalResult;
+    confirmedNumA = finalResult;
+    textOfFinalOutcome = results.textContent;
+    confirmedNumB = undefined;
+  } else {
+    return;
+  }
+}
+
+function useOperator(selectedOperator, e) {
+  //default to 0 if user hasn't entered a number and clicks an operator
+  timeStamp2 = e.timeStamp;
+  console.log(confirmedNumA);
+  console.log(finalResult);
+  if (confirmedNumA === undefined) {
+    confirmedNumA = Number(userInput);
+  }
+  results.textContent = confirmedNumA + " " + selectedOperator;
+  //revise logic below, on second operator press nothing happens.....
+  if (confirmedNumB !== undefined && finalResult !== confirmedNumA) {
+    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
+    results.textContent = `${finalResult} ${operator}`;
+    display.textContent = finalResult;
+    confirmedNumA = finalResult;
+    tempNumberB = confirmedNumB;
+    confirmedNumB = undefined;
+  } else if (confirmedNumB !== undefined && tempNumberB !== confirmedNumB) {
+    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
+    results.textContent = `${finalResult} ${operator}`;
+    display.textContent = finalResult;
+    confirmedNumA = finalResult;
+    tempNumberB = confirmedNumB;
+    confirmedNumB = undefined;
+  } else if (
+    confirmedNumB !== undefined &&
+    tempNumberB == confirmedNumB &&
+    timeStamp1 !== timeStamp2
+  ) {
+    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
+    results.textContent = `${finalResult} ${operator}`;
+    display.textContent = finalResult;
+    confirmedNumA = finalResult;
+    tempNumberB = confirmedNumB;
+    confirmedNumB = undefined;
+  }
+  userInput = "";
+}
+
+function clear() {
+  userInput = "";
+  display.textContent = "0";
+  results.textContent = "";
+  confirmedNumA = undefined;
+  confirmedNumB = undefined;
+  operator = "";
 }
 
 const display = document.querySelector("#current_selection");
@@ -31,47 +99,32 @@ const decimalButton = document.getElementById("decimal");
 let userInput = "";
 let confirmedNumA;
 let confirmedNumB;
+let tempNumberB;
 let finalResult;
 let operator;
+let timeStamp1;
+let timeStamp2;
 
 buttons.forEach((button) =>
-  button.addEventListener("click", () => {
+  button.addEventListener("click", (e) => {
     if (button.className === "number") {
       userInput += button.textContent;
       display.textContent = userInput;
+      if (confirmedNumA !== undefined) {
+        confirmedNumB = Number(userInput);
+        timeStamp1 = e.timeStamp;
+      }
     } else if (button.className === "operator") {
       operator = button.textContent;
-      if (typeof confirmedNumA === "undefined") {
-        results.textContent = userInput + " " + button.textContent;
-        confirmedNumA = Number(userInput);
-      } else {
-        results.textContent = `${confirmedNumA} ${operator}`;
-        confirmedNumB = Number(userInput);
-      }
-      userInput = "";
+      useOperator(operator, e);
     } else if (button.className === "C") {
-      userInput = "";
-      display.textContent = "0";
-      results.textContent = "";
-      confirmedNumA = undefined;
-      confirmedNumB = undefined;
-      operator = undefined;
+      clear();
     } else if (button.id === "equals") {
-      confirmedNumB = Number(userInput);
-      if (
-        typeof confirmedNumA !== "undefined" &&
-        typeof confirmedNumB !== "undefined"
-      ) {
-        finalResult = operate(operator, confirmedNumA, confirmedNumB);
-        results.textContent = `${confirmedNumA} ${operator} ${confirmedNumB} =`;
-        display.textContent = finalResult;
-        confirmedNumA = finalResult;
-        confirmedNumB = 0;
-      }
+      displayResult(confirmedNumA, confirmedNumB, operator);
     } else if (button.id == "decimal") {
-      if (confirmedNumB !== 0 || confirmedNumB !== undefined) {
-        confirmedNumB = 0;
-      }
+      // if (confirmedNumB !== 0 || confirmedNumB !== undefined) {
+      // confirmedNumB = 0;
+      // }
       if (!String(confirmedNumA).includes(".") && !userInput.includes(".")) {
         userInput += button.textContent;
         display.textContent += button.textContent;

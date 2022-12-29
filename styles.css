@@ -65,15 +65,12 @@ button:hover {
 }
 
 .C {
-  background-color: lightsalmon;
+  background-color: rgb(255 45 0);
 }
 
 .operator,
+#toggle_sign,
+#percentage,
 #equals {
   background-color: orange;
-}
-
-/*not using ATM*/
-.digits {
-  background-color: gray;
 }
