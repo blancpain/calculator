@@ -24,9 +24,7 @@ function operate(operator, a, b) {
 }
 //TODO: create an object for the different inputs - number, operator, equals, decimal etc and refer to the relevant functions
 
-let textOfFinalOutcome = "";
-
-function displayResult(a, b, operator) {
+function calculateWithEquals(a, b, operator) {
   if (
     a !== undefined &&
     b !== undefined &&
@@ -43,41 +41,36 @@ function displayResult(a, b, operator) {
   }
 }
 
+function calculateWithOperator(selectedOperator, e) {
+  finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
+  operator = e.target.textContent;
+  results.textContent = `${finalResult} ${operator}`;
+  display.textContent = finalResult;
+  confirmedNumA = finalResult;
+  tempNumberB = confirmedNumB;
+  confirmedNumB = undefined;
+}
+
 function useOperator(selectedOperator, e) {
-  //default to 0 if user hasn't entered a number and clicks an operator
-  timeStamp2 = e.timeStamp;
-  console.log(confirmedNumA);
-  console.log(finalResult);
+  //default to 0 if user hasn't entered "number one" and clicks an operator
   if (confirmedNumA === undefined) {
     confirmedNumA = Number(userInput);
   }
+  //to be used in scenario 3 below
+  timeStamp2 = e.timeStamp;
   results.textContent = confirmedNumA + " " + selectedOperator;
-  //revise logic below, on second operator press nothing happens.....
-  if (confirmedNumB !== undefined && finalResult !== confirmedNumA) {
-    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
-    results.textContent = `${finalResult} ${operator}`;
-    display.textContent = finalResult;
-    confirmedNumA = finalResult;
-    tempNumberB = confirmedNumB;
-    confirmedNumB = undefined;
-  } else if (confirmedNumB !== undefined && tempNumberB !== confirmedNumB) {
-    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
-    results.textContent = `${finalResult} ${operator}`;
-    display.textContent = finalResult;
-    confirmedNumA = finalResult;
-    tempNumberB = confirmedNumB;
-    confirmedNumB = undefined;
-  } else if (
-    confirmedNumB !== undefined &&
-    tempNumberB == confirmedNumB &&
-    timeStamp1 !== timeStamp2
-  ) {
-    finalResult = operate(selectedOperator, confirmedNumA, confirmedNumB);
-    results.textContent = `${finalResult} ${operator}`;
-    display.textContent = finalResult;
-    confirmedNumA = finalResult;
-    tempNumberB = confirmedNumB;
-    confirmedNumB = undefined;
+  if (confirmedNumB === undefined) {
+    userInput = "";
+    return;
+  } else if (finalResult !== confirmedNumA) {
+    //for first time calcs using an operator, we need to make sure there isn't a final result yet
+    calculateWithOperator(selectedOperator, e);
+  } else if (tempNumberB !== confirmedNumB) {
+    //for operator calcs where the user has changed "number 2", "number 1" is now always the "final result" until reset
+    calculateWithOperator(selectedOperator, e);
+  } else if (tempNumberB == confirmedNumB && timeStamp1 !== timeStamp2) {
+    //scenario 3: to catch situations where user has changed "number 2" but it is the same number,
+    calculateWithOperator(selectedOperator, e); //in that case we look at the timeStamp of the clicks to differentiate the numbers
   }
   userInput = "";
 }
@@ -96,14 +89,14 @@ const results = document.querySelector("#results");
 const buttons = document.querySelectorAll("button");
 const decimalButton = document.getElementById("decimal");
 
+//variables
+let textOfFinalOutcome = "";
 let userInput = "";
 let confirmedNumA;
 let confirmedNumB;
 let tempNumberB;
 let finalResult;
 let operator;
-let timeStamp1;
-let timeStamp2;
 
 buttons.forEach((button) =>
   button.addEventListener("click", (e) => {
@@ -115,16 +108,15 @@ buttons.forEach((button) =>
         timeStamp1 = e.timeStamp;
       }
     } else if (button.className === "operator") {
-      operator = button.textContent;
+      if (confirmedNumB === undefined) {
+        operator = button.textContent;
+      }
       useOperator(operator, e);
     } else if (button.className === "C") {
       clear();
     } else if (button.id === "equals") {
-      displayResult(confirmedNumA, confirmedNumB, operator);
+      calculateWithEquals(confirmedNumA, confirmedNumB, operator);
     } else if (button.id == "decimal") {
-      // if (confirmedNumB !== 0 || confirmedNumB !== undefined) {
-      // confirmedNumB = 0;
-      // }
       if (!String(confirmedNumA).includes(".") && !userInput.includes(".")) {
         userInput += button.textContent;
         display.textContent += button.textContent;
@@ -141,7 +133,7 @@ buttons.forEach((button) =>
     //   display.textContent = confirmedNumA;
     // }
     // else if (button.id === "toggle_sign") {
-    //   if (typeof confirmedNumA === "undefined") {
+    //   if (confirmedNumA === undefined) {
     //     confirmedNumA = -Number(userInput);
     //     display.textContent = confirmedNumA;
     //   } else {
