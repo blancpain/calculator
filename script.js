@@ -27,6 +27,11 @@ function operate(operator, a, b) {
 
 function calculateWithEquals(a, b, operator) {
   if (a !== undefined && b !== undefined) {
+    if (operator === "÷" && b === 0) {
+      alert("Come on...You know better than that!");
+      reset();
+      return;
+    }
     currentTotal = operate(operator, a, b);
     results.textContent = `${a} ${operator} ${b} =`;
     display.textContent = currentTotal;
@@ -40,6 +45,11 @@ function calculateWithEquals(a, b, operator) {
 }
 
 function calculateWithOperator(selectedOperator, e) {
+  if (selectedOperator === "÷" && confirmedNumB === 0) {
+    alert("Come on...You know better than that!");
+    reset();
+    return;
+  }
   currentTotal = operate(selectedOperator, confirmedNumA, confirmedNumB);
   operator = e.target.textContent;
   results.textContent = `${currentTotal} ${operator}`;
