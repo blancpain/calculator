@@ -64,8 +64,12 @@ button:hover {
   width: 32px;
 }
 
-.C {
-  background-color: rgb(255 45 0);
+.AC {
+  background-color: salmon;
+}
+
+#clear {
+  background-color: lightblue;
 }
 
 .operator,

@@ -71,6 +71,15 @@ function useOperator(selectedOperator, e) {
     initialUserInput = "";
     usedEquals = false;
     return;
+  } else if (usedClear === true && usedEquals === true) {
+    usedClear = false;
+    usedEquals = false;
+    operator = e.target.textContent; //as operator is not getting synced - examine further why this is needed
+    results.textContent = confirmedNumB + " " + operator;
+    confirmedNumA = confirmedNumB;
+    confirmedNumB = undefined;
+    initialUserInput = "";
+    return;
   } else if (currentTotal !== confirmedNumA) {
     //for first time calcs using an operator, we need to make sure there isn't a final result yet
     calculateWithOperator(selectedOperator, e);
@@ -84,13 +93,27 @@ function useOperator(selectedOperator, e) {
   initialUserInput = "";
 }
 
-function clear() {
+function reset() {
   initialUserInput = "";
   display.textContent = "0";
   results.textContent = "";
   confirmedNumA = undefined;
   confirmedNumB = undefined;
   operator = "";
+  usedClear = false;
+  usedEquals = false;
+}
+
+function clear() {
+  usedClear = true;
+  display.textContent = display.textContent.substring(
+    0,
+    display.textContent.length - 1
+  );
+  initialUserInput = display.textContent;
+  if (confirmedNumA !== undefined) {
+    confirmedNumB = Number(initialUserInput);
+  }
 }
 
 const display = document.querySelector("#current_selection");
@@ -106,6 +129,7 @@ let confirmedNumB;
 let currentTotal;
 let operator;
 let usedEquals = false;
+let usedClear = false;
 
 buttons.forEach((button) =>
   button.addEventListener("click", (e) => {
@@ -122,7 +146,9 @@ buttons.forEach((button) =>
         operator = button.textContent;
       }
       useOperator(operator, e);
-    } else if (button.className === "C") {
+    } else if (button.className === "AC") {
+      reset();
+    } else if (button.id === "clear") {
       clear();
     } else if (button.id === "equals") {
       calculateWithEquals(confirmedNumA, confirmedNumB, operator);
