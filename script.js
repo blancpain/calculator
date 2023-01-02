@@ -61,9 +61,6 @@ function calculateWithOperator(selectedOperator, e) {
 }
 
 function useOperator(selectedOperator, e) {
-  console.log(
-    `A: ${confirmedNumA}; B: ${confirmedNumB}' currentTotal: ${currentTotal}`
-  );
   //number A defaults to 0 if user hasn't entered "number one" and clicks an operator
   if (confirmedNumA === undefined) {
     confirmedNumA = Number(initialUserInput);
