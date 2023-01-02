@@ -61,6 +61,9 @@ function calculateWithOperator(selectedOperator, e) {
 }
 
 function useOperator(selectedOperator, e) {
+  console.log(
+    `A: ${confirmedNumA}; B: ${confirmedNumB}' currentTotal: ${currentTotal}`
+  );
   //number A defaults to 0 if user hasn't entered "number one" and clicks an operator
   if (confirmedNumA === undefined) {
     confirmedNumA = Number(initialUserInput);
@@ -86,6 +89,14 @@ function useOperator(selectedOperator, e) {
     return;
   } else if (usedClear === true && usedEquals === true) {
     usedClear = false;
+    usedEquals = false;
+    operator = e.key === undefined ? e.target.textContent : e.key;
+    results.textContent = confirmedNumB + " " + operator;
+    confirmedNumA = confirmedNumB;
+    confirmedNumB = undefined;
+    initialUserInput = "";
+    return;
+  } else if (usedEquals === true && confirmedNumB !== undefined) {
     usedEquals = false;
     operator = e.key === undefined ? e.target.textContent : e.key;
     results.textContent = confirmedNumB + " " + operator;
@@ -134,7 +145,9 @@ const results = document.querySelector("#results");
 const buttons = document.querySelectorAll("button");
 //variables
 const numberButtons = [];
-const arrayOfAllButtons = Array.from(buttons).map((item) => item.textContent); //get text of buttons
+for (let index = 0; index < 10; index++) {
+  numberButtons.push(index);
+}
 const operators = {
   "+": "+",
   "-": "-",
@@ -149,10 +162,6 @@ let currentTotal;
 let operator;
 let usedEquals = false;
 let usedClear = false;
-
-for (let index = 0; index < 10; index++) {
-  numberButtons.push(index);
-}
 
 function listenForKeyboardPresses(e) {
   //for Arrays "in" actually checks if there are corresponding indices in the array not the numbers themselves...
@@ -213,22 +222,6 @@ function listenForClicks(e) {
       display.textContent += e.target.textContent;
     }
   }
-  //BELOW functionality is OPTIONAL.....
-  //percentage
-  // else if (e.target.id === "percentage") {
-  //   initialUserInput /= 100;
-  //   display.textContent = initialUserInput;
-  // }
-  //toggle sign
-  // else if (e.target.id === "toggle_sign") {
-  //   if (confirmedNumA === undefined) {
-  //     confirmedNumA = -Number(initialUserInput);
-  //     display.textContent = confirmedNumA;
-  //   } else {
-  //     confirmedNumB = -Number(initialUserInput);
-  //     display.textContent = confirmedNumB;
-  //   }
-  // }
 }
 
 document.addEventListener("keydown", (e) => {
@@ -240,3 +233,21 @@ buttons.forEach((button) =>
     listenForClicks(e);
   })
 );
+
+//BELOW functionality is OPTIONAL (logic same as decimal/delete functionality)...
+
+//percentage
+// else if (e.target.id === "percentage") {
+//   initialUserInput /= 100;
+//   display.textContent = initialUserInput;
+// }
+//toggle sign
+// else if (e.target.id === "toggle_sign") {
+//   if (confirmedNumA === undefined) {
+//     confirmedNumA = -Number(initialUserInput);
+//     display.textContent = confirmedNumA;
+//   } else {
+//     confirmedNumB = -Number(initialUserInput);
+//     display.textContent = confirmedNumB;
+//   }
+// }
