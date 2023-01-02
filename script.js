@@ -16,18 +16,16 @@ function operate(operator, a, b) {
     return add(a, b);
   } else if (operator === "-") {
     return subtract(a, b);
-  } else if (operator === "×") {
+  } else if (operator === "×" || operator === "*") {
     return multiply(a, b);
-  } else if (operator === "÷") {
+  } else if (operator === "÷" || operator === "/") {
     return divide(a, b);
   }
 }
 
-//TODO: create an object for the different inputs - number, operator, equals, decimal etc and refer to the relevant functions
-
 function calculateWithEquals(a, b, operator) {
   if (a !== undefined && b !== undefined) {
-    if (operator === "÷" && b === 0) {
+    if ((operator === "÷" || operator === "/") && b === 0) {
       alert("Come on...You know better than that!");
       reset();
       return;
@@ -45,13 +43,16 @@ function calculateWithEquals(a, b, operator) {
 }
 
 function calculateWithOperator(selectedOperator, e) {
-  if (selectedOperator === "÷" && confirmedNumB === 0) {
+  if (
+    (selectedOperator === "÷" || selectedOperator === "/") &&
+    confirmedNumB === 0
+  ) {
     alert("Come on...You know better than that!");
     reset();
     return;
   }
   currentTotal = operate(selectedOperator, confirmedNumA, confirmedNumB);
-  operator = e.target.textContent;
+  operator = e.key === undefined ? e.target.textContent : e.key;
   results.textContent = `${currentTotal} ${operator}`;
   display.textContent = currentTotal;
   confirmedNumA = currentTotal;
@@ -60,7 +61,7 @@ function calculateWithOperator(selectedOperator, e) {
 }
 
 function useOperator(selectedOperator, e) {
-  //default to 0 if user hasn't entered "number one" and clicks an operator
+  //number A defaults to 0 if user hasn't entered "number one" and clicks an operator
   if (confirmedNumA === undefined) {
     confirmedNumA = Number(initialUserInput);
   }
@@ -75,16 +76,18 @@ function useOperator(selectedOperator, e) {
     usedEquals === true &&
     !String(currentTotal).includes(".")
   ) {
-    results.textContent = confirmedNumB + " " + selectedOperator;
+    operator = e.key === undefined ? e.target.textContent : e.key; //to get the actual value of the operator otherwise reverts to last use - check why this is (aslo applies to block below)
+    results.textContent = confirmedNumB + " " + operator;
     confirmedNumA = confirmedNumB;
     confirmedNumB = undefined;
     initialUserInput = "";
     usedEquals = false;
+    usedClear = false;
     return;
   } else if (usedClear === true && usedEquals === true) {
     usedClear = false;
     usedEquals = false;
-    operator = e.target.textContent; //as operator is not getting synced - examine further why this is needed
+    operator = e.key === undefined ? e.target.textContent : e.key;
     results.textContent = confirmedNumB + " " + operator;
     confirmedNumA = confirmedNumB;
     confirmedNumB = undefined;
@@ -126,12 +129,18 @@ function clear() {
   }
 }
 
-const display = document.querySelector("#current_selection");
+const display = document.querySelector("#main_display");
 const results = document.querySelector("#results");
 const buttons = document.querySelectorAll("button");
-const decimalButton = document.getElementById("decimal");
-
 //variables
+const numberButtons = [];
+const arrayOfAllButtons = Array.from(buttons).map((item) => item.textContent); //get text of buttons
+const operators = {
+  "+": "+",
+  "-": "-",
+  "*": "*",
+  "/": "/",
+};
 let initialUserInput = "";
 let tempNumberB;
 let confirmedNumA;
@@ -141,50 +150,93 @@ let operator;
 let usedEquals = false;
 let usedClear = false;
 
+for (let index = 0; index < 10; index++) {
+  numberButtons.push(index);
+}
+
+function listenForKeyboardPresses(e) {
+  //for Arrays "in" actually checks if there are corresponding indices in the array not the numbers themselves...
+  if (String(e.key) in numberButtons) {
+    initialUserInput += e.key;
+    display.textContent = initialUserInput;
+    if (confirmedNumA !== undefined) {
+      confirmedNumB = Number(initialUserInput);
+      //get timeStamp of initial number 2 assignment
+      timeStamp1 = e.timeStamp;
+    }
+  } else if (String(e.key) in operators) {
+    if (confirmedNumB === undefined) {
+      operator = e.key;
+    }
+    useOperator(operator, e);
+  } else if (e.key === "Escape") {
+    reset();
+  } else if (e.key === "Backspace") {
+    clear();
+  } else if (e.key === "=" || e.key === "Enter") {
+    calculateWithEquals(confirmedNumA, confirmedNumB, operator);
+  }
+  // decimal operator functionality
+  else if (e.key == ".") {
+    if (!display.textContent.includes(".")) {
+      initialUserInput += ".";
+      display.textContent += ".";
+    }
+  }
+}
+
+function listenForClicks(e) {
+  if (e.target.className === "number") {
+    initialUserInput += e.target.textContent;
+    display.textContent = initialUserInput;
+    if (confirmedNumA !== undefined) {
+      confirmedNumB = Number(initialUserInput);
+      //get timeStamp of initial number 2 assignment
+      timeStamp1 = e.timeStamp;
+    }
+  } else if (e.target.className === "operator") {
+    if (confirmedNumB === undefined) {
+      operator = e.target.textContent;
+    }
+    useOperator(operator, e);
+  } else if (e.target.className === "AC") {
+    reset();
+  } else if (e.target.id === "clear") {
+    clear();
+  } else if (e.target.id === "equals") {
+    calculateWithEquals(confirmedNumA, confirmedNumB, operator);
+  }
+  // decimal operator functionality
+  else if (e.target.id == "decimal") {
+    if (!display.textContent.includes(".")) {
+      initialUserInput += e.target.textContent;
+      display.textContent += e.target.textContent;
+    }
+  }
+  //BELOW functionality is OPTIONAL.....
+  //percentage
+  // else if (e.target.id === "percentage") {
+  //   initialUserInput /= 100;
+  //   display.textContent = initialUserInput;
+  // }
+  //toggle sign
+  // else if (e.target.id === "toggle_sign") {
+  //   if (confirmedNumA === undefined) {
+  //     confirmedNumA = -Number(initialUserInput);
+  //     display.textContent = confirmedNumA;
+  //   } else {
+  //     confirmedNumB = -Number(initialUserInput);
+  //     display.textContent = confirmedNumB;
+  //   }
+  // }
+}
+
+document.addEventListener("keydown", (e) => {
+  listenForKeyboardPresses(e);
+});
+
 buttons.forEach((button) =>
   button.addEventListener("click", (e) => {
-    if (button.className === "number") {
-      initialUserInput += button.textContent;
-      display.textContent = initialUserInput;
-      if (confirmedNumA !== undefined) {
-        confirmedNumB = Number(initialUserInput);
-        //get timeStamp of initial number 2 assignment
-        timeStamp1 = e.timeStamp;
-      }
-    } else if (button.className === "operator") {
-      if (confirmedNumB === undefined) {
-        operator = button.textContent;
-      }
-      useOperator(operator, e);
-    } else if (button.className === "AC") {
-      reset();
-    } else if (button.id === "clear") {
-      clear();
-    } else if (button.id === "equals") {
-      calculateWithEquals(confirmedNumA, confirmedNumB, operator);
-    }
-    // decimal operator functionality
-    else if (button.id == "decimal") {
-      if (!display.textContent.includes(".")) {
-        initialUserInput += button.textContent;
-        display.textContent += button.textContent;
-      }
-    }
-    //BELOW functionality is OPTIONAL.....
-    //percentage - to be revised & included
-    // else if (button.id === "percentage") {
-    //   initialUserInput /= 100;
-    //   display.textContent = initialUserInput;
-    // }
-    //toggle sign - to be revised & included
-    // else if (button.id === "toggle_sign") {
-    //   if (confirmedNumA === undefined) {
-    //     confirmedNumA = -Number(initialUserInput);
-    //     display.textContent = confirmedNumA;
-    //   } else {
-    //     confirmedNumB = -Number(initialUserInput);
-    //     display.textContent = confirmedNumB;
-    //   }
-    // }
+    listenForClicks(e);
   })
 );
