@@ -24,9 +24,6 @@ function operate(operator, a, b) {
 }
 
 function calculateWithEquals(a, b, operator) {
-  console.log(
-    `Current total: ${currentTotal}; number A: ${confirmedNumA}; number B: ${confirmedNumB}; Operator: ${operator}`
-  );
   if (a !== undefined && b !== undefined) {
     if ((operator === "÷" || operator === "/") && b === 0) {
       alert("Come on...You know better than that!");
@@ -147,6 +144,13 @@ function clear() {
   }
 }
 
+function addDecimal() {
+  if (!display.textContent.includes(".")) {
+    initialUserInput += ".";
+    display.textContent += ".";
+  }
+}
+
 const display = document.querySelector("#main_display");
 const results = document.querySelector("#results");
 const buttons = document.querySelectorAll("button");
@@ -175,10 +179,11 @@ function listenForKeyboardPresses(e) {
   //for Arrays "in" actually checks if there are corresponding indices in the array not the numbers themselves...
   if (String(e.key) in numberButtons) {
     initialUserInput += e.key;
-    display.textContent = initialUserInput;
+    display.textContent = Number(initialUserInput);
     if (confirmedNumA !== undefined) {
       confirmedNumB = Number(initialUserInput);
       //get timeStamp of initial number 2 assignment
+      //to be used in useOperator function
       timeStamp1 = e.timeStamp;
     }
   } else if (String(e.key) in operators) {
@@ -192,23 +197,19 @@ function listenForKeyboardPresses(e) {
     clear();
   } else if (e.key === "=" || e.key === "Enter") {
     calculateWithEquals(confirmedNumA, confirmedNumB, operator);
-  }
-  // decimal operator functionality
-  else if (e.key == ".") {
-    if (!display.textContent.includes(".")) {
-      initialUserInput += ".";
-      display.textContent += ".";
-    }
+  } else if (e.key == ".") {
+    addDecimal();
   }
 }
 
 function listenForClicks(e) {
   if (e.target.className === "number") {
     initialUserInput += e.target.textContent;
-    display.textContent = initialUserInput;
+    display.textContent = Number(initialUserInput);
     if (confirmedNumA !== undefined) {
       confirmedNumB = Number(initialUserInput);
       //get timeStamp of initial number 2 assignment
+      //to be used in useOperator function
       timeStamp1 = e.timeStamp;
     }
   } else if (e.target.className === "operator") {
@@ -222,13 +223,8 @@ function listenForClicks(e) {
     clear();
   } else if (e.target.id === "equals") {
     calculateWithEquals(confirmedNumA, confirmedNumB, operator);
-  }
-  // decimal operator functionality
-  else if (e.target.id === "decimal") {
-    if (!display.textContent.includes(".")) {
-      initialUserInput += e.target.textContent;
-      display.textContent += e.target.textContent;
-    }
+  } else if (e.target.id === "decimal") {
+    addDecimal();
   }
 }
 
