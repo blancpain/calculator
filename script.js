@@ -1,14 +1,14 @@
 function add(a, b) {
-  return a + b;
+  return Number((a + b).toFixed(3));
 }
 function subtract(a, b) {
-  return a - b;
+  return Number((a - b).toFixed(3));
 }
 function multiply(a, b) {
-  return a * b;
+  return Number((a * b).toFixed(3));
 }
 function divide(a, b) {
-  return a / b;
+  return Number((a / b).toFixed(3));
 }
 
 function operate(operator, a, b) {
@@ -74,7 +74,9 @@ function useOperator(selectedOperator, e) {
   if (confirmedNumB === undefined) {
     initialUserInput = "";
     return;
-  } else if (
+  }
+  //when = is used and then user adds decimals
+  else if (
     String(confirmedNumB).includes(".") &&
     usedEquals === true &&
     !String(currentTotal).includes(".")
@@ -87,7 +89,9 @@ function useOperator(selectedOperator, e) {
     usedEquals = false;
     usedClear = false;
     return;
-  } else if (usedClear === true && usedEquals === true) {
+  }
+  //when = is used and then user deletes some numbers
+  else if (usedClear === true && usedEquals === true) {
     usedClear = false;
     usedEquals = false;
     operator = e.key === undefined ? e.target.textContent : e.key;
@@ -96,7 +100,9 @@ function useOperator(selectedOperator, e) {
     confirmedNumB = undefined;
     initialUserInput = "";
     return;
-  } else if (usedEquals === true && confirmedNumB !== undefined) {
+  }
+  // when = is used and then user starts typing a new number (no decimals or clear used)
+  else if (usedEquals === true && confirmedNumB !== undefined) {
     usedEquals = false;
     operator = e.key === undefined ? e.target.textContent : e.key;
     results.textContent = confirmedNumB + " " + operator;
