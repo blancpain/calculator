@@ -24,6 +24,9 @@ function operate(operator, a, b) {
 }
 
 function calculateWithEquals(a, b, operator) {
+  console.log(
+    `Current total: ${currentTotal}; number A: ${confirmedNumA}; number B: ${confirmedNumB}; Operator: ${operator}`
+  );
   if (a !== undefined && b !== undefined) {
     if ((operator === "÷" || operator === "/") && b === 0) {
       alert("Come on...You know better than that!");
@@ -35,6 +38,7 @@ function calculateWithEquals(a, b, operator) {
     display.textContent = currentTotal;
     confirmedNumA = currentTotal;
     initialUserInput = currentTotal;
+    confirmedNumA = undefined;
     confirmedNumB = undefined;
     usedEquals = true;
   } else {
@@ -53,7 +57,7 @@ function calculateWithOperator(selectedOperator, e) {
   }
   currentTotal = operate(selectedOperator, confirmedNumA, confirmedNumB);
   operator = e.key === undefined ? e.target.textContent : e.key;
-  results.textContent = `${currentTotal} ${operator}`;
+  results.textContent = `${currentTotal} ${operator} `;
   display.textContent = currentTotal;
   confirmedNumA = currentTotal;
   tempNumberB = confirmedNumB;
@@ -159,6 +163,7 @@ const operators = {
 };
 let initialUserInput = "";
 let tempNumberB;
+let tempNumberB2;
 let confirmedNumA;
 let confirmedNumB;
 let currentTotal;
@@ -219,7 +224,7 @@ function listenForClicks(e) {
     calculateWithEquals(confirmedNumA, confirmedNumB, operator);
   }
   // decimal operator functionality
-  else if (e.target.id == "decimal") {
+  else if (e.target.id === "decimal") {
     if (!display.textContent.includes(".")) {
       initialUserInput += e.target.textContent;
       display.textContent += e.target.textContent;
@@ -236,21 +241,3 @@ buttons.forEach((button) =>
     listenForClicks(e);
   })
 );
-
-//BELOW functionality is OPTIONAL (logic same as decimal/delete functionality)...
-
-//percentage
-// else if (e.target.id === "percentage") {
-//   initialUserInput /= 100;
-//   display.textContent = initialUserInput;
-// }
-//toggle sign
-// else if (e.target.id === "toggle_sign") {
-//   if (confirmedNumA === undefined) {
-//     confirmedNumA = -Number(initialUserInput);
-//     display.textContent = confirmedNumA;
-//   } else {
-//     confirmedNumB = -Number(initialUserInput);
-//     display.textContent = confirmedNumB;
-//   }
-// }

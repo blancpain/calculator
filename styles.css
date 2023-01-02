@@ -55,13 +55,14 @@ h1 {
 }
 
 .calc_row > * {
-  flex: 1 100%;
+  flex-grow: 1;
 }
 
 button {
   font-size: 30px;
   border: 1px solid black;
   transition: background-color 0.1s;
+  min-width: 80px;
 }
 
 button:hover {
@@ -72,27 +73,20 @@ button:hover {
   flex-grow: 1;
 }
 
+.AC,
 #zero {
-  width: 106.5px;
-}
-
-#decimal {
-  width: 32px;
+  width: 120px;
 }
 
 .AC {
-  /* background-color: yellow; */
   background-color: red;
 }
 
 #clear {
   background-color: lightblue;
-  /* background-color: yellow; */
 }
 
 .operator,
-#toggle_sign,
-#percentage,
 #equals {
   background-color: orange;
 }
