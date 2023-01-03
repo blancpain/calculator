@@ -1,12 +1,13 @@
 body {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  justify-content: center;
+  height: 100vh;
   align-items: center;
+  justify-content: space-between;
   background-color: ivory;
-  margin: none;
   font-family: "Helvetica", sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 #calc {
@@ -92,4 +93,27 @@ button:hover {
 .operator,
 #equals {
   background-color: orange;
+}
+
+.footer {
+  margin-bottom: 1em;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes logo-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.footer-logo {
+  width: 25px;
+  height: 25px;
+  animation: logo-animation 5s linear infinite;
 }
