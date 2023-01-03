@@ -42,13 +42,16 @@ body {
 
 #results {
   font-size: 15px;
-  word-wrap: break-word;
   max-width: 300px;
 }
 
 #main_display,
 #results {
   word-wrap: break-word;
+}
+
+#main_display {
+  max-width: 310px;
 }
 
 .calc_row,
