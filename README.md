@@ -8,4 +8,4 @@ This one was definitely challenging especially in terms of implementing the logi
 
 Overall I am quite happy with the final result in terms of usability. There were numerous hurdles and bugs along the way but what really helped me was writing out what the expected behaviour is in a pseudo code format and then figuring out how to actually translate this into code. This is something I plan on doing going forward especially as projects get more and more complex. 
 
-# [LIVE PREVIEW] ()
+# [LIVE PREVIEW] (https://blancpain.github.io/calculator/)
