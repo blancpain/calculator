@@ -1,6 +1,6 @@
 # Calculator
 
-Written in HTML, CSS and JavaScript, this is part of The Odin Project curriculum.
+Written in HTML, CSS and JavaScript.
 
 # Key Takeaways
 
