@@ -178,7 +178,9 @@ let usedClear = false;
 function listenForKeyboardPresses(e) {
   //for Arrays "in" actually checks if there are corresponding indices in the array not the numbers themselves...
   if (String(e.key) in numberButtons) {
-    initialUserInput += e.key;
+    if (initialUserInput.length < 50) {
+      initialUserInput += e.key;
+    }
     display.textContent = Number(initialUserInput);
     if (confirmedNumA !== undefined) {
       confirmedNumB = Number(initialUserInput);
